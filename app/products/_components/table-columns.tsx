@@ -24,6 +24,7 @@ export const productTableColumns: ColumnDef<Product>[] = [
     cell: (row) => {
       const product = row.row.original
       const badgeVariant =
+        // @ts-expect-error - status is string
         product.status === 'IN_STOCK' ? 'in_stock' : 'out_of_stock'
 
       return <StockStatusBadge variant={badgeVariant} />
