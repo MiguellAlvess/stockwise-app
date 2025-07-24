@@ -12,9 +12,8 @@ import {
   DialogTrigger,
 } from '@/app/_components/ui/dialog'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { PlusIcon } from 'lucide-react'
+import { Loader2Icon, PlusIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import z from 'zod'
 
 import {
   Form,
@@ -26,25 +25,19 @@ import {
 } from '@/app/_components/ui/form'
 import { Input } from '@/app/_components/ui/input'
 import { NumericFormat } from 'react-number-format'
+import { createProduct } from '@/app/_actions/product/create-product'
+import { useState } from 'react'
+import {
+  createProductSchema,
+  CreateProductSchema,
+} from '@/app/_actions/product/create-product/schema'
 
-const addProductSchema = z.object({
-  name: z.string().trim().min(1, {
-    message: 'O nome do produto é obrigatorio',
-  }),
-  price: z.number().min(0.01, {
-    message: 'O valor do produto deve ser maior que zero',
-  }),
-  stock: z.number().int().min(0, {
-    message: 'O estoque deve ser maior que zero',
-  }),
-})
-
-type AddProductSchema = z.infer<typeof addProductSchema>
-
-const AddProductButton = () => {
-  const form = useForm<AddProductSchema>({
+const CreateProductButton = () => {
+  const [dialogIsOpen, setDialogIsOpen] = useState(false)
+  const form = useForm<CreateProductSchema>({
     shouldUnregister: true,
-    resolver: zodResolver(addProductSchema),
+    // @ts-expect-error - resolver is defined
+    resolver: zodResolver(createProductSchema),
     defaultValues: {
       name: '',
       price: 0,
@@ -52,12 +45,17 @@ const AddProductButton = () => {
     },
   })
 
-  const onSubmit = (data: AddProductSchema) => {
-    console.log(data)
+  const onSubmit = async (data: CreateProductSchema) => {
+    try {
+      await createProduct(data)
+      setDialogIsOpen(false)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
-    <Dialog>
+    <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
       <DialogTrigger asChild>
         <Button className="gap-2">
           <PlusIcon size={20} />
@@ -67,6 +65,7 @@ const AddProductButton = () => {
       <DialogContent>
         <Form {...form}>
           <form
+            // @ts-expect-error - onSubmit is defined
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
           >
@@ -77,6 +76,7 @@ const AddProductButton = () => {
               </DialogDescription>
             </DialogHeader>
             <FormField
+              // @ts-expect-error - control is defined
               control={form.control}
               name="name"
               render={({ field }) => (
@@ -90,6 +90,7 @@ const AddProductButton = () => {
               )}
             />
             <FormField
+              // @ts-expect-error - control is defined
               control={form.control}
               name="price"
               render={({ field }) => (
@@ -116,6 +117,7 @@ const AddProductButton = () => {
               )}
             />
             <FormField
+              // @ts-expect-error - control is defined
               control={form.control}
               name="stock"
               render={({ field }) => (
@@ -123,6 +125,7 @@ const AddProductButton = () => {
                   <FormLabel>Estoque</FormLabel>
                   <FormControl>
                     <Input
+                      type="number"
                       placeholder="Digite o estoque do produto"
                       {...field}
                     />
@@ -137,7 +140,16 @@ const AddProductButton = () => {
                   Cancelar
                 </Button>
               </DialogClose>
-              <Button type="submit">Salvar</Button>
+              <Button
+                type="submit"
+                disabled={form.formState.isSubmitting}
+                className="gap-1.5"
+              >
+                {form.formState.isSubmitting && (
+                  <Loader2Icon className="animate-spin" size={18} />
+                )}
+                Salvar
+              </Button>
             </DialogFooter>
           </form>
         </Form>
@@ -146,4 +158,4 @@ const AddProductButton = () => {
   )
 }
 
-export default AddProductButton
+export default CreateProductButton
