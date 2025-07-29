@@ -22,6 +22,7 @@ import {
   TableBody,
   TableCaption,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -34,6 +35,7 @@ import { useMemo, useState } from 'react'
 
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import SalesTableDropdownMenu from './table-dropdown-menu'
 
 const formSchema = z.object({
   productId: z.string().uuid({
@@ -75,6 +77,7 @@ const UpsertSheetContent = ({
     const selectedProduct = products.find((product) => {
       return product.id === data.productId
     })
+
     if (!selectedProduct) return
     setSelectedProduct((currentProduct) => {
       const existingProuct = currentProduct.find(
@@ -102,11 +105,18 @@ const UpsertSheetContent = ({
     })
     form.reset()
   }
+
   const productsTotal = useMemo(() => {
     return selectedProduct.reduce((acc, product) => {
       return acc + product.price * product.quantity
     }, 0)
   }, [selectedProduct])
+
+  const onDelete = (productId: string) => {
+    setSelectedProduct((currentProduct) => {
+      return currentProduct.filter((product) => product.id !== productId)
+    })
+  }
   return (
     <SheetContent className="!max-w-[700px]">
       <SheetHeader>
@@ -168,6 +178,7 @@ const UpsertSheetContent = ({
             <TableHead>Preço unitário</TableHead>
             <TableHead>Quantidade</TableHead>
             <TableHead>Total</TableHead>
+            <TableHead>Ações</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -179,13 +190,19 @@ const UpsertSheetContent = ({
               <TableCell>
                 {formatCurrency(product.price * product.quantity)}
               </TableCell>
+              <TableCell>
+                <SalesTableDropdownMenu product={product} onDelete={onDelete} />
+              </TableCell>
             </TableRow>
           ))}
+        </TableBody>
+        <TableFooter>
           <TableRow>
             <TableCell colSpan={3}>Total</TableCell>
             <TableCell>{formatCurrency(productsTotal)}</TableCell>
+            <TableCell></TableCell>
           </TableRow>
-        </TableBody>
+        </TableFooter>
       </Table>
     </SheetContent>
   )
