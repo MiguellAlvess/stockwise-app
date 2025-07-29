@@ -23,19 +23,31 @@ import {
 import { Input } from '@/app/_components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2Icon } from 'lucide-react'
+import { useAction } from 'next-safe-action/hooks'
+import { Dispatch, SetStateAction } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { NumericFormat } from 'react-number-format'
+import { toast } from 'sonner'
 
 interface UpsertProductDialogContentProps {
   defaultValues?: UpsertProductSchema
-  onSuccess?: () => void
+  setDialogIsOpen: Dispatch<SetStateAction<boolean>>
 }
 
 const UpsertProductDialogContent = ({
-  onSuccess,
+  setDialogIsOpen,
   defaultValues,
 }: UpsertProductDialogContentProps) => {
+  const { execute: executeUpsertProduct } = useAction(upsertProduct, {
+    onSuccess: () => {
+      toast.success('Produto salvo com sucesso')
+      setDialogIsOpen(false)
+    },
+    onError: () => {
+      toast.error('Erro ao criar produto')
+    },
+  })
   const form = useForm<UpsertProductSchema>({
     shouldUnregister: true,
     // @ts-expect-error - resolver is defined
@@ -49,20 +61,12 @@ const UpsertProductDialogContent = ({
 
   const isEditing = !!defaultValues
 
-  const onSubmit = async (data: UpsertProductSchema) => {
-    try {
-      await upsertProduct({ ...data, id: defaultValues?.id })
-      onSuccess?.()
-    } catch (error) {
-      console.error(error)
-    }
-  }
   return (
     <DialogContent>
       <Form {...form}>
         <form
           // @ts-expect-error - onSubmit is defined
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(executeUpsertProduct)}
           className="flex flex-col gap-4"
         >
           <DialogHeader className="flex items-center justify-center">
