@@ -1,11 +1,11 @@
 'use client'
 
-import { Product } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
 import StockStatusBadge from './stock-status-badge'
 import ProductTableDropdownMenu from './table-dropdown-menu'
+import { ProductDto } from '@/app/_data_access/product/get-products'
 
-export const productTableColumns: ColumnDef<Product>[] = [
+export const productTableColumns: ColumnDef<ProductDto>[] = [
   {
     accessorKey: 'name',
     header: 'Produto',
@@ -32,7 +32,6 @@ export const productTableColumns: ColumnDef<Product>[] = [
     cell: (row) => {
       const product = row.row.original
       const badgeVariant =
-        // @ts-expect-error - status is string
         product.status === 'IN_STOCK' ? 'in_stock' : 'out_of_stock'
 
       return <StockStatusBadge variant={badgeVariant} />
