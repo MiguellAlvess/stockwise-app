@@ -59,6 +59,10 @@ const UpsertProductDialogContent = ({
     },
   })
 
+  const onSubmit = (data: UpsertProductSchema) => {
+    executeUpsertProduct({ ...data, id: defaultValues?.id })
+  }
+
   const isEditing = !!defaultValues
 
   return (
@@ -66,7 +70,7 @@ const UpsertProductDialogContent = ({
       <Form {...form}>
         <form
           // @ts-expect-error - onSubmit is defined
-          onSubmit={form.handleSubmit(executeUpsertProduct)}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4"
         >
           <DialogHeader className="flex items-center justify-center">
