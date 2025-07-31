@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
-export const createSaleSchema = z.object({
+export const upsertSaleSchema = z.object({
+  id: z.string().uuid().optional(),
   products: z.array(
     z.object({
       id: z.string().uuid(),
@@ -11,4 +12,4 @@ export const createSaleSchema = z.object({
   ),
 })
 
-export type CreateSaleSchema = z.infer<typeof createSaleSchema>
+export type UpsertSaleSchema = z.infer<typeof upsertSaleSchema>
