@@ -14,4 +14,5 @@ export const deleteSale = actionClient
       },
     })
     revalidatePath('/sales')
+    revalidatePath('/')
   })
