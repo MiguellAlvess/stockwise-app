@@ -1,7 +1,7 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import StockStatusBadge from './stock-status-badge'
+import StockStatusBadge from '../../_components/stock-status-badge'
 import ProductTableDropdownMenu from './table-dropdown-menu'
 import { ProductDto } from '@/app/_data_access/product/get-products'
 
