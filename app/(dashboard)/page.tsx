@@ -1,16 +1,9 @@
-import { ShoppingBasketIcon } from 'lucide-react'
 import Header, {
   HeaderLeft,
   HeaderSubtitle,
   HeaderTitle,
 } from '../_components/header'
-import {
-  SummaryCard,
-  SummaryCardIcon,
-  SummaryCardSkeleton,
-  SummaryCardTitle,
-  SummaryCardValue,
-} from './_components/summary-card'
+import { SummaryCardSkeleton } from './_components/summary-card'
 import { getDashboard } from '../_data_access/dashboard/get-dashboard'
 
 import RevenueChart from './_components/revenue-chart'
@@ -20,10 +13,10 @@ import { Suspense } from 'react'
 import TodayRevenueCard from './_components/today-revenue'
 import TotalSalesCard from './_components/total-sales'
 import TotalInStockCard from './_components/total-in-stock'
+import TotalProductsCard from './_components/total-products'
 
 const Home = async () => {
-  const { totalProducts, totalLast14DaysRevenue, mostSoldProducts } =
-    await getDashboard()
+  const { totalLast14DaysRevenue, mostSoldProducts } = await getDashboard()
   return (
     <div className="m-8 flex w-full flex-col space-y-8 rounded-lg">
       <Header>
@@ -32,7 +25,6 @@ const Home = async () => {
           <HeaderTitle>Dashboard</HeaderTitle>
         </HeaderLeft>
       </Header>
-
       <div className="grid grid-cols-2 gap-6">
         <Suspense fallback={<SummaryCardSkeleton />}>
           <TotalRevenueCard />
@@ -45,18 +37,12 @@ const Home = async () => {
         <Suspense fallback={<SummaryCardSkeleton />}>
           <TotalSalesCard />
         </Suspense>
-
         <Suspense fallback={<SummaryCardSkeleton />}>
           <TotalInStockCard />
         </Suspense>
-
-        <SummaryCard>
-          <SummaryCardIcon>
-            <ShoppingBasketIcon />
-          </SummaryCardIcon>
-          <SummaryCardTitle>Produtos</SummaryCardTitle>
-          <SummaryCardValue>{totalProducts}</SummaryCardValue>
-        </SummaryCard>
+        <Suspense fallback={<SummaryCardSkeleton />}>
+          <TotalProductsCard />
+        </Suspense>
       </div>
       <div className="grid min-h-0 grid-cols-[minmax(0,2.5fr),minmax(0,1fr)] gap-6">
         <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white p-6">
@@ -64,12 +50,10 @@ const Home = async () => {
           <p className="text-sm text-slate-400">Últimos 14 dias</p>
           <RevenueChart data={totalLast14DaysRevenue} />
         </div>
-
         <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white">
           <p className="p-6 text-lg font-semibold text-slate-900">
             Produtos mais vendidos
           </p>
-
           <div className="space-y-7 overflow-y-auto px-6">
             {mostSoldProducts.map((product) => (
               <MostSoldProductItem key={product.productId} product={product} />
