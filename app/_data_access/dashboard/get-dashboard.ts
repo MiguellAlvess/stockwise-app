@@ -2,7 +2,7 @@ import { db } from '@/app/_lib/prisma'
 import dayjs from 'dayjs'
 import { ProductStatusDto } from '../product/get-products'
 
-export interface DayTotalRevenue {
+export interface DayTotalRevenueDto {
   day: string
   totalRevenue: number
 }
@@ -16,7 +16,7 @@ export interface MostSoldProductDto {
 }
 
 interface DashboardDto {
-  totalLast14DaysRevenue: DayTotalRevenue[]
+  totalLast14DaysRevenue: DayTotalRevenueDto[]
   mostSoldProducts: MostSoldProductDto[]
 }
 
@@ -28,7 +28,7 @@ export const getDashboard = async (): Promise<DashboardDto> => {
     },
   )
 
-  const totalLast14DaysRevenue: DayTotalRevenue[] = []
+  const totalLast14DaysRevenue: DayTotalRevenueDto[] = []
 
   for (const day of last14Days) {
     const dayTotalRevenue = await db.$queryRawUnsafe<
