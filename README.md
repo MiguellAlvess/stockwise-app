@@ -70,3 +70,13 @@ npm run dev
 O banco de dados PostgreSQL está hospedado no Neon, um serviço serverless que facilita o gerenciamento e escalabilidade do banco na nuvem.
 
 A aplicação está hospedada na Vercel, aproveitando o ecossistema completo do Next.js para deploy rápido, escalável e com alta performance.
+
+## Interface
+
+Aqui estão algumas imagens da interface da aplicação:
+
+![Dashboard page](https://github.com/user-attachments/assets/0a453b6f-637e-48d2-a42b-12af8f87f0f7)
+
+![Product page](https://github.com/user-attachments/assets/f1788a91-89c9-4180-80bc-b3a91216e2f5)
+
+![Sales page](https://github.com/user-attachments/assets/b0260c23-fc32-41cf-9a2f-e882808e5f0f)
