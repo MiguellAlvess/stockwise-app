@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Stockwise
 
-## Getting Started
+Aplicação web desenvolvida para o controle e gestão de estoque. Permite o acompanhamento de produtos, registro de vendas e visualização de métricas de desempenho em um dashboard.
 
-First, run the development server:
+## Configuração de ambiente
+
+Antes de rodar o projeto, copie o arquivo .env.example para **.env** e configure a variável DATABASE_URL conforme seu ambiente:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Se estiver usando o Docker para o banco, a URL deve seguir o padrão:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+postgresql://postgres:suasenha@localhost:5432/nomedobanco
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Substitua **suasenha** e **nomedobanco** pelos valores usados na criação do container.
 
-## Learn More
+## Executando o projeto
 
-To learn more about Next.js, take a look at the following resources:
+### Subindo banco de dados com o Docker Compose
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Para facilitar o desenvolvimento, utilize o Docker Compose para criar e iniciar o container PostgreSQL:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+docker-compose up -d
+```
 
-## Deploy on Vercel
+Esse comando iniciará o container conforme definido no arquivo docker-compose.yml.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Aplicando migrations com o prisma
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Com o banco ativo, aplique as migrations para criar a estrutura do banco:
+
+```bash
+npx prisma migrate deploy
+```
+
+Em ambiente de desenvolvimento, você também pode usar:
+
+```bash
+npx prisma migrate dev
+```
+
+## Instalação
+
+```bash
+# Instale as dependências
+npm install
+
+# Inicie o projeto
+npm run dev
+```
+
+## Principais tecnologias utilizadas
+
+- **Next.js**
+- **PostgreSQL**
+- **Prisma ORM**
+- **Docker**
+- **Shadcn**
+- **Tailwindcss**
+- **Zod**
+- **React Hook Form**
+
+## Deploy
+
+O banco de dados PostgreSQL está hospedado no Neon, um serviço serverless que facilita o gerenciamento e escalabilidade do banco na nuvem.
+
+A aplicação está hospedada na Vercel, aproveitando o ecossistema completo do Next.js para deploy rápido, escalável e com alta performance.
